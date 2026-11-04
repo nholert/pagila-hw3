@@ -1,3 +1,18 @@
+SELECT
+    title,
+    (
+        SELECT STRING_AGG(
+            REPLACE(INITCAP(TRIM(actor_name)), ' ', ''),
+            ', ' ORDER BY ord
+        )
+        FROM UNNEST(
+            STRING_TO_ARRAY(actors, ',')
+        ) WITH ORDINALITY AS names(actor_name, ord)
+    ) AS actors
+FROM film_list
+WHERE category = 'Documentary'
+  AND rating = 'G'
+ORDER BY title;
 /*
  * Find every documentary film that is rated G.
  * Report the title and the actors.

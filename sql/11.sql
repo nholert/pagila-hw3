@@ -1,3 +1,23 @@
+SELECT
+    c.first_name,
+    c.last_name,
+    f.title,
+    latest.rental_date
+FROM customer AS c
+JOIN LATERAL (
+    SELECT
+        r.inventory_id,
+        r.rental_date
+    FROM rental AS r
+    WHERE r.customer_id = c.customer_id
+    ORDER BY r.rental_date DESC, r.rental_id DESC
+    LIMIT 1
+) AS latest ON TRUE
+JOIN inventory AS i
+    ON latest.inventory_id = i.inventory_id
+JOIN film AS f
+    ON i.film_id = f.film_id
+ORDER BY c.last_name, c.first_name;
 /* For each customer, find the movie that they have rented most recently.
  *
  * NOTE:

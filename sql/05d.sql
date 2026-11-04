@@ -1,3 +1,36 @@
+SELECT f.title
+FROM film AS f
+JOIN film_actor AS fa
+    ON f.film_id = fa.film_id
+WHERE fa.actor_id IN (
+    SELECT fa2.actor_id
+    FROM film_actor AS fa2
+    JOIN film AS f2 ON fa2.film_id = f2.film_id
+    WHERE f2.title = 'AMERICAN CIRCUS'
+)
+INTERSECT
+SELECT f.title
+FROM film AS f
+JOIN film_actor AS fa
+    ON f.film_id = fa.film_id
+WHERE fa.actor_id IN (
+    SELECT fa2.actor_id
+    FROM film_actor AS fa2
+    JOIN film AS f2 ON fa2.film_id = f2.film_id
+    WHERE f2.title = 'ACADEMY DINOSAUR'
+)
+INTERSECT
+SELECT f.title
+FROM film AS f
+JOIN film_actor AS fa
+    ON f.film_id = fa.film_id
+WHERE fa.actor_id IN (
+    SELECT fa2.actor_id
+    FROM film_actor AS fa2
+    JOIN film AS f2 ON fa2.film_id = f2.film_id
+    WHERE f2.title = 'AGENT TRUMAN'
+)
+ORDER BY title;
 /* 
  * In the previous query, the actors could come from any combination of movies.
  * Unfortunately, you've found that if the actors all come from only 1 or 2 of the movies,

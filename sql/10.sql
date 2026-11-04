@@ -1,3 +1,31 @@
+WITH customer_totals AS (
+    SELECT
+        c.customer_id,
+        c.first_name || ' ' || c.last_name AS name,
+        SUM(p.amount) AS total_payment
+    FROM customer AS c
+    JOIN payment AS p
+        ON c.customer_id = p.customer_id
+    GROUP BY c.customer_id, c.first_name, c.last_name
+),
+ranked_customers AS (
+    SELECT
+        customer_id,
+        name,
+        total_payment,
+        NTILE(100) OVER (
+            ORDER BY total_payment
+        ) AS percentile
+    FROM customer_totals
+)
+SELECT
+    customer_id,
+    name,
+    total_payment,
+    percentile
+FROM ranked_customers
+WHERE percentile >= 90
+ORDER BY name;
 /*
  * Management wants to rank customers by how much money they have spent in order to send coupons to the top 10%.
  *

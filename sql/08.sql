@@ -1,3 +1,22 @@
+SELECT f.title
+FROM film AS f
+JOIN inventory AS i
+    ON f.film_id = i.film_id
+JOIN rental AS r
+    ON i.inventory_id = r.inventory_id
+WHERE r.customer_id IN (
+    SELECT DISTINCT r2.customer_id
+    FROM rental AS r2
+    JOIN inventory AS i2
+        ON r2.inventory_id = i2.inventory_id
+    JOIN film AS f2
+        ON i2.film_id = f2.film_id
+    WHERE f2.title = 'BUCKET BROTHERHOOD'
+)
+AND f.title <> 'BUCKET BROTHERHOOD'
+GROUP BY f.film_id, f.title
+HAVING COUNT(DISTINCT r.customer_id) >= 3
+ORDER BY f.title;
 /*
  * The film 'BUCKET BROTHERHOOD' is your favorite movie, but you're tired of watching it.
  * You want to find something new to watch that is still similar to 'BUCKET BROTHERHOOD'.

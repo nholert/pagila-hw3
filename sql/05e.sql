@@ -1,3 +1,15 @@
+SELECT f.title
+FROM film AS f
+JOIN film_category AS fc1
+    ON f.film_id = fc1.film_id
+JOIN film_category AS fc2
+    ON fc1.category_id = fc2.category_id
+JOIN film AS reference_film
+    ON fc2.film_id = reference_film.film_id
+WHERE reference_film.title = 'AMERICAN CIRCUS'
+GROUP BY f.film_id, f.title
+HAVING COUNT(DISTINCT fc1.category_id) >= 2
+ORDER BY f.title;
 /* 
  * You've decided that you don't actually like ACADEMY DINOSAUR and AGENT TRUMAN,
  * and want to focus on more movies that are similar to AMERICAN CIRCUS.
